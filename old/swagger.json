@@ -1,0 +1,254 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "User Authentication Service",
+        "version": "1.0.0",
+        "description": "API for user authentication and management."
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "schemes": ["http", "https"],
+    "paths": {
+        "/user": {
+            "post": {
+                "summary": "Create a new user",
+                "description": "Registers a new user in the system.",
+                "consumes": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "user",
+                        "description": "User object to be created",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User created successfully"
+                    },
+                    "400": {
+                        "description": "Invalid user data provided"
+                    },
+                    "409": {
+                        "description": "User with the given username already exists"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get all users",
+                "description": "Retrieve a list of all registered users.",
+                "responses": {
+                    "200": {
+                        "description": "A list of users",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/User"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/user/login": {
+            "get": {
+                "summary": "User login",
+                "description": "Logs in an existing user.",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "username",
+                        "type": "string",
+                        "required": true,
+                        "description": "The username of the user"
+                    },
+                    {
+                        "in": "query",
+                        "name": "password",
+                        "type": "string",
+                        "required": true,
+                        "description": "The password of the user"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login successful. Returns a JWT token.",
+                        "headers": {
+                            "Authorization": {
+                                "type": "string",
+                                "description": "Bearer token"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username or password"
+                    },
+                    "500": {
+                        "description": "Internal Server error"
+                    }
+                }
+            }
+        },
+        "/user/logout": {
+            "get": {
+                "summary": "User logout",
+                "description": "Logs out the current user.",
+                "responses": {
+                    "200": {
+                        "description": "Logout successful"
+                    },
+                    "500": {
+                        "description": "Internal server error."
+                    }
+                }
+            }
+        },
+        "/user/{username}": {
+            "get": {
+                "summary": "Get a user by username",
+                "description": "Retrieves details of a specific user.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "username",
+                        "type": "string",
+                        "required": true,
+                        "description": "The username of the user"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User details",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update a user",
+                "description": "Updates the details of a specific user.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "username",
+                        "type": "string",
+                        "required": true,
+                        "description": "The username of the user"
+                    },
+                    {
+                        "in": "body",
+                        "name": "user",
+                        "description": "Updated user object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserUpdate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User updated successfully"
+                    },
+                    "400": {
+                        "description": "Invalid user data provided"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a user",
+                "description": "Deletes a specific user from the system.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "username",
+                        "type": "string",
+                        "required": true,
+                        "description": "The username of the user"
+                    }
+                ],
+                "responses": {
+                    "204": { "description": "User deleted successfully" },
+                    "404": { "description": "User not found" }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "UserCreate": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "description": "The username of the user"
+                },
+                "password": {
+                    "type": "string",
+                    "description": "The password of the user"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                }
+            },
+            "required": ["username", "password"]
+        },
+        "UserUpdate": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "description": "The password of the user"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                }
+            }
+        },
+        "User": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "description": "The username of the user"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        }
+    }
+}

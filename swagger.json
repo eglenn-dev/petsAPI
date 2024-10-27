@@ -1,0 +1,215 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Pet Management System API",
+        "version": "1.0.0",
+        "description": "API for managing pets and user accounts."
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000",
+            "description": "Local development server"
+        }
+    ],
+    "paths": {
+        "/users/login": {
+            "post": {
+                "summary": "User login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": { "type": "string" },
+                                    "password": { "type": "string" }
+                                },
+                                "required": ["username", "password"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "token": { "type": "string" }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": { "description": "Unauthorized" }
+                }
+            }
+        },
+        "/users/logout": {
+            "post": {
+                "summary": "User logout",
+                "responses": {
+                    "200": { "description": "Successful logout" },
+                    "401": { "description": "Unauthorized" }
+                }
+            }
+        },
+        "/pets": {
+            "get": {
+                "summary": "Get all pets (for admin or all pets of a user based on query parameter)",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "ownerId",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Filter pets by ownerId (optional)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of pets",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Pet"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add a new pet",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/TempPet" }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": { "description": "Pet created" },
+                    "400": { "description": "Bad request" }
+                }
+            }
+        },
+        "/pets/{id}": {
+            "get": {
+                "summary": "Get a pet by ID",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "type": "string" },
+                        "description": "Pet ID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pet details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TempPet"
+                                }
+                            }
+                        }
+                    },
+                    "404": { "description": "Pet not found" }
+                }
+            },
+            "put": {
+                "summary": "Update a pet",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "type": "string" },
+                        "description": "Pet ID"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/TempPet" }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": { "description": "Pet updated" },
+                    "404": { "description": "Pet not found" }
+                }
+            },
+            "delete": {
+                "summary": "Delete a pet",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": { "type": "string" },
+                        "description": "Pet ID"
+                    }
+                ],
+                "responses": {
+                    "204": { "description": "Pet deleted" },
+                    "404": { "description": "Pet not found" }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "TempPet": {
+                "type": "object",
+                "properties": {
+                    "name": { "type": "string" },
+                    "type": { "type": "string" },
+                    "breed": { "type": "string" },
+                    "color": { "type": "string" },
+                    "birthdate": { "type": "string", "format": "date" },
+                    "sex": { "type": "string" },
+                    "location": { "type": "string" },
+                    "ownerId": { "type": "string" }
+                },
+                "required": ["name", "type", "ownerId"]
+            },
+            "Pet": {
+                "type": "object",
+                "properties": {
+                    "_id": { "type": "string" },
+                    "name": { "type": "string" },
+                    "type": { "type": "string" },
+                    "breed": { "type": "string" },
+                    "color": { "type": "string" },
+                    "birthdate": { "type": "string", "format": "date" },
+                    "sex": { "type": "string" },
+                    "location": { "type": "string" },
+                    "ownerId": { "type": "string" }
+                },
+                "required": ["name", "type", "ownerId"]
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "_id": { "type": "string" },
+                    "username": { "type": "string" },
+                    "password": { "type": "string" }
+                },
+                "required": ["username", "password"]
+            }
+        }
+    }
+}
