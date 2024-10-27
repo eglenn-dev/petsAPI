@@ -1,0 +1,37 @@
+GET https://petsapi.eglenn.app/pet/
+###
+
+GET https://petsapi.eglenn.app/pet/66f8cd96affb1d079c8d346c
+###
+
+POST https://petsapi.eglenn.app/contacts/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Riddles",
+    "type": "Cat",
+    "breed": "Tabby",
+    "color": "Grey",
+    "birthdate": "2024-10-27",
+    "sex": "Male",
+    "location": "Canada",
+    "ownerId": "1234"
+  }
+###
+
+PUT https://petsapi.eglenn.app/contacts/6701e99ad73fb9d875d210ad HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Riddles",
+    "type": "Cat",
+    "breed": "Tabby",
+    "color": "Grey",
+    "birthdate": "2024-10-27",
+    "sex": "Male",
+    "location": "Canada",
+    "ownerId": "4321"
+}
+###
+
+DELETE https://petsapi.eglenn.app/contacts/6701e99ad73fb9d875d210ad HTTP/1.1
