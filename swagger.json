@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "https://petsapi.eglenn.app",
+            "url": "https://petapi.eglenn.app",
             "description": "Production server"
         },
         {
