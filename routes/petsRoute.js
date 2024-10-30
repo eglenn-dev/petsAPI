@@ -17,7 +17,7 @@ const validateAndSanitizePetInput = (method) => {
                 body('birthdate').notEmpty().withMessage('Birthdate is required').isISO8601().withMessage('Invalid date format'),
                 body('sex').notEmpty().withMessage('Gender is required').trim().escape(),
                 body('location').notEmpty().withMessage('Location is required').trim().escape(),
-                body('ownerId').isMongoId().withMessage('Invalid Owner ID'),
+                body('ownerId').notEmpty().withMessage('Owner ID is required'),
             ];
         case 'updatePet':
             return [

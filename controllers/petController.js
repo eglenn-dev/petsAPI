@@ -5,9 +5,9 @@ const { validationResult } = require('express-validator');
 exports.getAllPets = async (req, res) => {
     try {
         const ownerId = req.query.ownerId;
-        if (ownerId && !/^[0-9a-fA-F]{24}$/.test(ownerId)) {
-            return res.status(400).json({ message: "Invalid Owner ID format" });
-        }
+        // if (ownerId && !/^[0-9a-fA-F]{24}$/.test(ownerId)) {
+        //     return res.status(400).json({ message: "Invalid Owner ID format" });
+        // }
 
         let pets;
         if (ownerId) {
