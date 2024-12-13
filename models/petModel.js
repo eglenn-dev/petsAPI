@@ -38,6 +38,23 @@ petModel.findAll = async () => {
     return petsData;
 }
 
+petModel.findByOwnerId = async (ownerId) => {
+    const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.1nwrn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+    const client = new MongoClient(uri);
+    let petsData;
+    try {
+        await client.connect();
+        const database = client.db('petsAPI');
+        const pets = database.collection('pets');
+        petsData = await pets.find({ ownerId: ownerId }).toArray();
+    } catch (e) {
+        console.error(e);
+    } finally {
+        await client.close();
+    }
+    return petsData;
+}
+
 petModel.findById = async (id) => {
     const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.1nwrn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
     const client = new MongoClient(uri);

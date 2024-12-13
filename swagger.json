@@ -16,51 +16,6 @@
         }
     ],
     "paths": {
-        "/users/login": {
-            "post": {
-                "summary": "User login",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "username": { "type": "string" },
-                                    "password": { "type": "string" }
-                                },
-                                "required": ["username", "password"]
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful login",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "token": { "type": "string" }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": { "description": "Unauthorized" }
-                }
-            }
-        },
-        "/users/logout": {
-            "post": {
-                "summary": "User logout",
-                "responses": {
-                    "200": { "description": "Successful logout" },
-                    "401": { "description": "Unauthorized" }
-                }
-            }
-        },
         "/pets": {
             "get": {
                 "summary": "Get all pets (for admin or all pets of a user based on query parameter)",
@@ -71,7 +26,7 @@
                         "schema": {
                             "type": "string"
                         },
-                        "description": "Filter pets by ownerId (optional)"
+                        "description": "Filter pets by ownerId (same as username, optional)"
                     }
                 ],
                 "responses": {
@@ -88,7 +43,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "summary": "Add a new pet",
@@ -103,7 +63,12 @@
                 "responses": {
                     "201": { "description": "Pet created" },
                     "400": { "description": "Bad request" }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/pets/{id}": {
@@ -130,7 +95,12 @@
                         }
                     },
                     "404": { "description": "Pet not found" }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
                 "summary": "Update a pet",
@@ -154,7 +124,12 @@
                 "responses": {
                     "200": { "description": "Pet updated" },
                     "404": { "description": "Pet not found" }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "summary": "Delete a pet",
@@ -170,7 +145,12 @@
                 "responses": {
                     "204": { "description": "Pet deleted" },
                     "404": { "description": "Pet not found" }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },
@@ -185,10 +165,9 @@
                     "color": { "type": "string" },
                     "birthdate": { "type": "string", "format": "date" },
                     "sex": { "type": "string" },
-                    "location": { "type": "string" },
-                    "ownerId": { "type": "string" }
+                    "location": { "type": "string" }
                 },
-                "required": ["name", "type", "ownerId"]
+                "required": ["name", "type"]
             },
             "Pet": {
                 "type": "object",
@@ -200,10 +179,9 @@
                     "color": { "type": "string" },
                     "birthdate": { "type": "string", "format": "date" },
                     "sex": { "type": "string" },
-                    "location": { "type": "string" },
-                    "ownerId": { "type": "string" }
+                    "location": { "type": "string" }
                 },
-                "required": ["name", "type", "ownerId"]
+                "required": ["name", "type"]
             },
             "User": {
                 "type": "object",
@@ -214,6 +192,18 @@
                 },
                 "required": ["username", "password"]
             }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
         }
-    }
+    },
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ]
 }

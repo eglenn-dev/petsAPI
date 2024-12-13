@@ -2,9 +2,7 @@ const express = require('express');
 const router = express.Router();
 const petController = require('../controllers/petController');
 const { body, param } = require('express-validator');
-// const { authenticateJWT } = require('../middleware/authMiddleware');
 
-// router.use(authenticateJWT);
 
 const validateAndSanitizePetInput = (method) => {
     switch (method) {
@@ -17,7 +15,6 @@ const validateAndSanitizePetInput = (method) => {
                 body('birthdate').notEmpty().withMessage('Birthdate is required').isISO8601().withMessage('Invalid date format'),
                 body('sex').notEmpty().withMessage('Gender is required').trim().escape(),
                 body('location').notEmpty().withMessage('Location is required').trim().escape(),
-                body('ownerId').notEmpty().withMessage('Owner ID is required').escape(),
             ];
         case 'updatePet':
             return [
@@ -28,27 +25,18 @@ const validateAndSanitizePetInput = (method) => {
                 body('birthdate').notEmpty().withMessage('Birthdate is required').isISO8601().withMessage('Invalid date format'),
                 body('sex').notEmpty().withMessage('Gender is required').trim().escape(),
                 body('location').notEmpty().withMessage('Location is required').trim().escape(),
-                body('ownerId').notEmpty().withMessage('Owner ID is required').escape(),
             ];
         default:
             return [];
     }
 };
 
+const validatePetId = param('id').isMongoId().withMessage('Invalid Pet ID');
 
 router.get('/', petController.getAllPets);
 router.post('/', validateAndSanitizePetInput('addPet'), petController.addPet);
-router.get('/:id',
-    param('id').isMongoId().withMessage('Invalid Pet ID'),
-    petController.getPetById);
-router.put('/:id',
-    param('id').isMongoId().withMessage('Invalid Pet ID'),
-    validateAndSanitizePetInput('updatePet'),
-    petController.updatePet
-);
-router.delete('/:id',
-    param('id').isMongoId().withMessage('Invalid Pet ID'),
-    petController.deletePet);
-
+router.get('/:id', validatePetId, petController.getPetById);
+router.put('/:id', validatePetId, validateAndSanitizePetInput('updatePet'), petController.updatePet);
+router.delete('/:id', validatePetId, petController.deletePet);
 
 module.exports = router;
